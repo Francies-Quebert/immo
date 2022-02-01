@@ -1,3 +1,20 @@
+*****************************************************************
+## Steps to run the project 
+
+# Step 1
+yarn install or npm install
+
+
+# Step 2
+
+yarn start
+
+
+******************************************************************
+
+###################################################################################################
+Documentation Readme
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
