@@ -1,5 +1,5 @@
 import React from "react";
-import { CheckboxModel, DetailTableData } from "../../models/propertyModel";
+import {  DetailTableData } from "../../models/propertyModel";
 import TableComponent from "../TableComponent/TableComponent";
 import TitleComponent from "../TitleComponent";
 interface Props {
