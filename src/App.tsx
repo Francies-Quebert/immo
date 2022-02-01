@@ -20,6 +20,7 @@ interface MyState {
   propertyTypes: Filters[];
   searchValue: string;
   searchResults: DetailTableData[];
+  selectedData: DetailTableData[];
 }
 
 class App extends React.Component<MyProps, MyState> {
@@ -30,6 +31,7 @@ class App extends React.Component<MyProps, MyState> {
       propertyTypes: [],
       searchValue: "",
       searchResults: [],
+      selectedData: [],
     };
   }
 
@@ -52,9 +54,7 @@ class App extends React.Component<MyProps, MyState> {
       alert("Please Enter a Address");
       return;
     }
-    let tempData = this.state.searchResults.filter(
-      (data) => data.isSelected === true
-    );
+    let tempData = this.state.selectedData;
     //fetching data from fetchProperties
     let availableProperty = await fetchProperties({
       address: this.state.searchValue,
@@ -65,7 +65,7 @@ class App extends React.Component<MyProps, MyState> {
       alert("No Data Found");
       return;
     }
-
+    console.log(tempData);
     // inserting  data searched
     let getPropertyDetails = await Promise.all(
       availableProperty.properties.map(async ({ id }) => {
@@ -79,14 +79,6 @@ class App extends React.Component<MyProps, MyState> {
         }
       })
     );
-    // adding back selected data value
-    tempData.forEach((td) => {
-      let tempIndex = getPropertyDetails.findIndex((i) => i.id === td.id);
-
-      if (tempIndex < 0) {
-        getPropertyDetails.unshift(td);
-      }
-    });
     // pushing back in the state
     this.setState({ searchResults: getPropertyDetails });
   }
@@ -114,11 +106,7 @@ class App extends React.Component<MyProps, MyState> {
               <div className="app__seclected-prop">
                 <div className="app__seclected-prop-container">
                   {/* selected properties component */}
-                  <SelectedProperties
-                    data={this.state.searchResults.filter(
-                      (data) => data.isSelected === true
-                    )}
-                  />
+                  <SelectedProperties data={this.state.selectedData} />
                 </div>
               </div>
               <div className="app__search-results">
@@ -140,13 +128,36 @@ class App extends React.Component<MyProps, MyState> {
                     data={this.state.searchResults}
                     selectedProperty={this.state.selectedProperty}
                     onCheckBoxChange={(value, rowData) => {
-                      let tempData = this.state.searchResults;
-                      let tempIdx = tempData.findIndex(
-                        ({ id }) => id === rowData.id
+                      let tempSelectedData = this.state.selectedData;
+                      let tempSearchResult = this.state.searchResults;
+                      const tempSelIdx = tempSelectedData.findIndex(
+                        (dd) => dd.id === rowData.id
                       );
-                      tempData[tempIdx].isSelected = value;
-                      this.setState({ searchResults: tempData });
+                      const tempIdx = tempSearchResult.findIndex(
+                        (dd) => dd.id === rowData.id
+                      );
+                      if (tempSelIdx < 0) {
+                        tempSelectedData.push({
+                          ...rowData,
+                          isSelected: true,
+                        });
+                        tempSearchResult[tempIdx].isSelected = true;
+                      } else {
+                        tempSearchResult[tempIdx].isSelected = false;
+                        tempSelectedData = tempSelectedData.filter(
+                          (dd) => dd.id !== rowData.id
+                        );
+                      }
+                      console.log({
+                        selectedData: tempSelectedData,
+                        searchResults: tempSearchResult,
+                      });
+                      this.setState({
+                        selectedData: tempSelectedData,
+                        searchResults: tempSearchResult,
+                      });
                     }}
+                    selectedData={this.state.selectedData}
                   />
                 </div>
               </div>

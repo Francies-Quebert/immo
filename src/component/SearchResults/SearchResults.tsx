@@ -1,5 +1,5 @@
 import React from "react";
-import {  DetailTableData } from "../../models/propertyModel";
+import { DetailTableData } from "../../models/propertyModel";
 import TableComponent from "../TableComponent/TableComponent";
 import TitleComponent from "../TitleComponent";
 interface Props {
@@ -11,12 +11,14 @@ interface Props {
     rowData: any,
     event: React.ChangeEvent<Element>
   ) => void;
+  selectedData?: DetailTableData[];
 }
 const SearchResults: React.FC<Props> = ({
   selectedProperty,
   allowSelect,
   data,
   onCheckBoxChange,
+  selectedData,
 }) => {
   return (
     <div>
@@ -26,10 +28,11 @@ const SearchResults: React.FC<Props> = ({
         dataSource={data.filter((dd) =>
           selectedProperty === "ALL"
             ? true
-            : dd.isSelected === true || dd.propertyType === selectedProperty
+            :  dd.propertyType === selectedProperty
         )}
         showPropertyType={true}
         onCheckBoxChange={onCheckBoxChange}
+        selectedData={selectedData}
       />
     </div>
   );

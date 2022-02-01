@@ -14,6 +14,7 @@ interface Props {
     rowData: any,
     event: React.ChangeEvent<Element>
   ) => void;
+  selectedData?: DetailTableData[];
 }
 // main Table component with table head ,table data compoennet to display data
 const TableComponent: React.FC<Props> = ({
@@ -21,6 +22,7 @@ const TableComponent: React.FC<Props> = ({
   dataSource,
   showPropertyType,
   onCheckBoxChange,
+  selectedData,
 }) => {
   return (
     <table className="data-table">
