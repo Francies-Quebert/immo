@@ -1,15 +1,15 @@
-import React from "react";
-import { DetailTableData } from "../../models/propertyModel";
+import React, { useContext } from "react";
+import PropertyContext from "../../context/propertyContext";
 import TableComponent from "../TableComponent/TableComponent";
 import TitleComponent from "../TitleComponent";
-interface Props {
-  data: DetailTableData[];
-}
-const SelectedProperties: React.FC<Props> = ({ data }) => {
+interface Props {}
+const SelectedProperties: React.FC<Props> = () => {
+  const contextType = useContext(PropertyContext);
   return (
     <div>
       <TitleComponent title="Selected Properties" />
-      <TableComponent dataSource={data}  />
+      {/* data of selected property */}
+      <TableComponent dataSource={contextType.selectedData} />
     </div>
   );
 };

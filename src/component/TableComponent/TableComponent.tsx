@@ -24,6 +24,7 @@ const TableComponent: React.FC<Props> = ({
   onCheckBoxChange,
   selectedData,
 }) => {
+ 
   return (
     <table className="data-table">
       <thead>

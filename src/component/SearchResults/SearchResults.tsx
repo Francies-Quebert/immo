@@ -1,38 +1,47 @@
-import React from "react";
+import React, { useContext } from "react";
+import PropertyContext from "../../context/propertyContext";
 import { DetailTableData } from "../../models/propertyModel";
 import TableComponent from "../TableComponent/TableComponent";
 import TitleComponent from "../TitleComponent";
 interface Props {
-  selectedProperty: string;
-  allowSelect?: boolean;
-  data: DetailTableData[];
-  onCheckBoxChange?: (
-    value: boolean,
-    rowData: any,
-    event: React.ChangeEvent<Element>
-  ) => void;
-  selectedData?: DetailTableData[];
 }
-const SearchResults: React.FC<Props> = ({
-  selectedProperty,
-  allowSelect,
-  data,
-  onCheckBoxChange,
-  selectedData,
-}) => {
+// Search Results component 
+const SearchResults: React.FC<Props> = ( ) => {
+  const contextType = useContext(PropertyContext);
+
+  // on Check on change function
+  const onCheckBoxChange = (value: boolean, rowData: DetailTableData) => {
+    let tempSelectedData = contextType.selectedData;
+    let tempSearchResult = contextType.searchResults;
+    const tempSelIdx = tempSelectedData.findIndex((dd) => dd.id === rowData.id);
+    const tempIdx = tempSearchResult.findIndex((dd) => dd.id === rowData.id);
+    if (tempSelIdx < 0) {
+      tempSelectedData.push({
+        ...rowData,
+        isSelected: true,
+      });
+      tempSearchResult[tempIdx].isSelected = true;
+    } else {
+      tempSearchResult[tempIdx].isSelected = false;
+      tempSelectedData = tempSelectedData.filter((dd) => dd.id !== rowData.id);
+    }
+    
+    contextType?.setSelectedData?.(tempSelectedData);
+    contextType.setSearchResults?.(tempSearchResult);
+  };
   return (
     <div>
       <TitleComponent title="Search results" />
       <TableComponent
-        allowSelect={allowSelect}
-        dataSource={data.filter((dd) =>
-          selectedProperty === "ALL"
+        allowSelect={true}
+        dataSource={contextType.searchResults.filter((dd) =>
+          contextType.selectedProperty === "ALL"
             ? true
-            :  dd.propertyType === selectedProperty
+            : dd.propertyType === contextType.selectedProperty
         )}
         showPropertyType={true}
         onCheckBoxChange={onCheckBoxChange}
-        selectedData={selectedData}
+        selectedData={contextType.selectedData}
       />
     </div>
   );
