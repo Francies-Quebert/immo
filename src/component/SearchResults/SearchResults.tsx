@@ -19,7 +19,7 @@ const SearchResults: React.FC<Props> = () => {
     const findSelDataIdx = propertySelector.selectedData.findIndex(
       (aa) => aa.id === rowData.id
     );
-    let tempSelectedData;
+    let tempSelectedData: DetailTableData[];
     if (findSelDataIdx < 0) {
       tempSelectedData = [...propertySelector.selectedData, rowData];
     } else {
@@ -27,13 +27,23 @@ const SearchResults: React.FC<Props> = () => {
         (aa) => aa.id !== rowData.id
       );
     }
+    // updateSearchResultCheckBox(
+    //   tempSelectedData,
+    //   propertySelector.searchResults
+    // ).then((res) => {
+    //   dispatch(setSearchResults(res));
+    // });
     updateSearchResultCheckBox(
       tempSelectedData,
       propertySelector.searchResults
     ).then((res) => {
-      dispatch(setSearchResults(res));
+      dispatch(
+        setSelectedData({
+          selectedData: tempSelectedData,
+          searchResults: res,
+        })
+      );
     });
-    dispatch(setSelectedData(tempSelectedData));
   };
 
   return (

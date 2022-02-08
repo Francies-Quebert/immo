@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DetailTableData, Filters, MyState } from "../../models/propertyModel";
+import { updateSearchResultCheckBox } from "../../utils";
 import type { RootState } from "../index";
 
 // Define a type for the slice state
@@ -12,7 +13,10 @@ const initialState: MyState = {
   searchResults: [],
   selectedData: [],
 };
-
+interface selectedDataInterface {
+  selectedData: DetailTableData[];
+  searchResults: DetailTableData[];
+}
 export const propertySlice = createSlice({
   name: "property",
   // `createSlice` will infer the state type from the `initialState` argument
@@ -30,8 +34,10 @@ export const propertySlice = createSlice({
     setAvailablePropertyTypes: (state, action: PayloadAction<Filters[]>) => {
       state.propertyTypes = action.payload;
     },
-    setSelectedData: (state, action: PayloadAction<DetailTableData[]>) => {
-      state.selectedData = action.payload;
+    setSelectedData: (state, action: PayloadAction<selectedDataInterface>) => {
+      state.selectedData = action.payload.selectedData;
+      state.searchResults = action.payload.searchResults;
+      return state;
     },
   },
 });
