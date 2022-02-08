@@ -1,26 +1,30 @@
-import React, { useContext } from "react";
-import PropertyContext from "../../context/propertyContext";
-import { fetchProperties, fetchPropertyDetails } from "../../store/api";
+import React from "react";
+import { fetchProperties, fetchPropertyDetails } from "../../api/api";
 import TitleComponent from "../TitleComponent";
 import SearchButton from "./SearchButton";
 import SearchInput from "./SearchInput";
-interface Props {
-  onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
-}
+import {
+  setSearchResults,
+  setSearchValue,
+} from "../../store/reducers/propertyReducer";
+import { updateSearchResultCheckBox } from "../../utils";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+interface Props {}
 // Search Results for address component
-const SearchComponent: React.FC<Props> = ({ onChange = () => {} }) => {
-  const contextType = useContext(PropertyContext);
+const SearchComponent: React.FC<Props> = () => {
+  const dispatch = useAppDispatch();
+  const propertySelector = useAppSelector((state) => state.property);
 
   const fetchAddress = async () => {
     // checking if address is empty
-    if (!contextType.searchValue || contextType.searchValue === "") {
+    if (!propertySelector.searchValue || propertySelector.searchValue === "") {
       alert("Please Enter a Address");
       return;
     }
-    let tempData = contextType.selectedData;
+    let tempData = propertySelector.selectedData;
     //fetching data from fetchProperties
     let availableProperty = await fetchProperties({
-      address: contextType.searchValue,
+      address: propertySelector.searchValue,
     }).catch((er) => {
       alert("Error Fetching Data..Try again later ");
     });
@@ -47,7 +51,12 @@ const SearchComponent: React.FC<Props> = ({ onChange = () => {} }) => {
       );
       // pushing back in the state
       if (getPropertyDetails) {
-        contextType?.setSearchResults?.(getPropertyDetails);
+        updateSearchResultCheckBox(
+          propertySelector.selectedData,
+          getPropertyDetails
+        ).then((res) => {
+          dispatch(setSearchResults(res));
+        });
       } else {
         alert("Try Again Later..Error Occured");
         return;
@@ -66,12 +75,9 @@ const SearchComponent: React.FC<Props> = ({ onChange = () => {} }) => {
       <TitleComponent title="Search" />
       <div className="search">
         <SearchInput
-          value={contextType.searchValue}
+          value={propertySelector.searchValue}
           onChange={(e) => {
-            if (!contextType.setSearchValue) onChange(e);
-            else {
-              contextType.setSearchValue(e.target.value);
-            }
+            dispatch(setSearchValue(e.target.value));
           }}
         />
         <SearchButton type="submit" name="Search" />

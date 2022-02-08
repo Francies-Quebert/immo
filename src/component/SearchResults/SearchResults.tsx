@@ -1,47 +1,54 @@
-import React, { useContext } from "react";
-import PropertyContext from "../../context/propertyContext";
+import React from "react";
 import { DetailTableData } from "../../models/propertyModel";
 import TableComponent from "../TableComponent/TableComponent";
 import TitleComponent from "../TitleComponent";
-interface Props {
-}
-// Search Results component 
-const SearchResults: React.FC<Props> = ( ) => {
-  const contextType = useContext(PropertyContext);
+import {
+  setSearchResults,
+  setSelectedData,
+} from "../../store/reducers/propertyReducer";
+import { updateSearchResultCheckBox } from "../../utils";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+interface Props {}
+// Search Results component
+const SearchResults: React.FC<Props> = () => {
+  const dispatch = useAppDispatch();
+  const propertySelector = useAppSelector((state) => state.property);
 
   // on Check on change function
   const onCheckBoxChange = (value: boolean, rowData: DetailTableData) => {
-    let tempSelectedData = contextType.selectedData;
-    let tempSearchResult = contextType.searchResults;
-    const tempSelIdx = tempSelectedData.findIndex((dd) => dd.id === rowData.id);
-    const tempIdx = tempSearchResult.findIndex((dd) => dd.id === rowData.id);
-    if (tempSelIdx < 0) {
-      tempSelectedData.push({
-        ...rowData,
-        isSelected: true,
-      });
-      tempSearchResult[tempIdx].isSelected = true;
+    const findSelDataIdx = propertySelector.selectedData.findIndex(
+      (aa) => aa.id === rowData.id
+    );
+    let tempSelectedData;
+    if (findSelDataIdx < 0) {
+      tempSelectedData = [...propertySelector.selectedData, rowData];
     } else {
-      tempSearchResult[tempIdx].isSelected = false;
-      tempSelectedData = tempSelectedData.filter((dd) => dd.id !== rowData.id);
+      tempSelectedData = propertySelector.selectedData.filter(
+        (aa) => aa.id !== rowData.id
+      );
     }
-    
-    contextType?.setSelectedData?.(tempSelectedData);
-    contextType.setSearchResults?.(tempSearchResult);
+    updateSearchResultCheckBox(
+      tempSelectedData,
+      propertySelector.searchResults
+    ).then((res) => {
+      dispatch(setSearchResults(res));
+    });
+    dispatch(setSelectedData(tempSelectedData));
   };
+
   return (
     <div>
       <TitleComponent title="Search results" />
       <TableComponent
         allowSelect={true}
-        dataSource={contextType.searchResults.filter((dd) =>
-          contextType.selectedProperty === "ALL"
+        dataSource={propertySelector.searchResults.filter((dd) =>
+          propertySelector.selectedProperty === "ALL"
             ? true
-            : dd.propertyType === contextType.selectedProperty
+            : dd.propertyType === propertySelector.selectedProperty
         )}
         showPropertyType={true}
         onCheckBoxChange={onCheckBoxChange}
-        selectedData={contextType.selectedData}
+        selectedData={propertySelector.selectedData}
       />
     </div>
   );

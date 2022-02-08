@@ -24,7 +24,6 @@ const TableComponent: React.FC<Props> = ({
   onCheckBoxChange,
   selectedData,
 }) => {
- 
   return (
     <table className="data-table">
       <thead>
@@ -44,9 +43,9 @@ const TableComponent: React.FC<Props> = ({
         </tr>
       </thead>
       <tbody>
-        {dataSource?.map((row) => {
+        {dataSource?.map((row, idx) => {
           return (
-            <tr key={row.id} className="data-table__conatiner">
+            <tr key={idx} className="data-table__conatiner">
               {allowSelect && (
                 <TableData>
                   <CustomCheckbox

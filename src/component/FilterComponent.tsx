@@ -1,24 +1,26 @@
-import React, { useContext } from "react";
-import PropertyContext from "../context/propertyContext";
+import React from "react";
 import TitleComponent from "./TitleComponent";
+import { setSearchPropertyType } from "../store/reducers/propertyReducer";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 interface Props {}
 
 //filter property type
 const FilterComponent: React.FC<Props> = () => {
-  const contextType = useContext(PropertyContext);
+  const dispatch = useAppDispatch();
+  const propertySelector = useAppSelector((state) => state.property);
   return (
     <div className="filter">
       <TitleComponent title={`Property Types`} />
       <div className="filter__name">
         {/* mapping data to render property type */}
-        {contextType.propertyTypes.length > 0 &&
-          contextType.propertyTypes.map((row) => (
+        {propertySelector.propertyTypes.length > 0 &&
+          propertySelector.propertyTypes.map((row) => (
             <div
               key={row.value}
               className={`filter__name--container ${
-                contextType.selectedProperty === row.value ? "active" : ""
+                propertySelector.selectedProperty === row.value ? "active" : ""
               }`}
-              onClick={() => contextType?.setSearchPropertyType?.(row.value)}
+              onClick={() => dispatch(setSearchPropertyType(row.value))}
             >
               {row.label}
             </div>
