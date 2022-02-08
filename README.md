@@ -11,7 +11,7 @@ yarn install or npm install
 
 yarn start or npm run install
 
-
+netify app link : https://tender-mayer-1ece64.netlify.app/
 ***************************************************************************************************
 
 

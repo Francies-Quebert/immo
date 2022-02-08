@@ -1,4 +1,4 @@
-import { ThunkAction, Action, compose } from "@reduxjs/toolkit";
+import { ThunkAction, Action } from "@reduxjs/toolkit";
 import reducers from "./reducers/index";
 import { createStore, StoreEnhancer } from "redux";
 
@@ -18,7 +18,8 @@ const isReduxDevtoolsExtenstionExist = (
 
 export const store = createStore(
   reducers,
-  isReduxDevtoolsExtenstionExist(window)
+  isReduxDevtoolsExtenstionExist(window) &&
+    (process.env.NODE_ENV !== "production" || process.env.PUBLIC_URL.length > 0)
     ? window.__REDUX_DEVTOOLS_EXTENSION__()
     : undefined
 );

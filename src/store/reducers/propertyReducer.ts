@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DetailTableData, Filters, MyState } from "../../models/propertyModel";
-import { updateSearchResultCheckBox } from "../../utils";
 import type { RootState } from "../index";
 
 // Define a type for the slice state

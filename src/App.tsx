@@ -1,6 +1,5 @@
 import React from "react";
 import Header from "./component/Header";
-// import Logo from "./assets/images/immo-logo.svg";
 import Logo from "./logo.svg";
 import FilterComponent from "./component/FilterComponent";
 import { Filters, MyState } from "./models/propertyModel";

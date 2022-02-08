@@ -3,7 +3,6 @@ import { DetailTableData } from "../../models/propertyModel";
 import TableComponent from "../TableComponent/TableComponent";
 import TitleComponent from "../TitleComponent";
 import {
-  setSearchResults,
   setSelectedData,
 } from "../../store/reducers/propertyReducer";
 import { updateSearchResultCheckBox } from "../../utils";
@@ -27,12 +26,6 @@ const SearchResults: React.FC<Props> = () => {
         (aa) => aa.id !== rowData.id
       );
     }
-    // updateSearchResultCheckBox(
-    //   tempSelectedData,
-    //   propertySelector.searchResults
-    // ).then((res) => {
-    //   dispatch(setSearchResults(res));
-    // });
     updateSearchResultCheckBox(
       tempSelectedData,
       propertySelector.searchResults
